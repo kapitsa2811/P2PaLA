@@ -489,15 +489,18 @@ def main():
             if opts.out_mode == "LR":
                 l_w = (
                     torch.from_numpy(train_data.w[0]).type(torch.FloatTensor).to(device)
+                    #transform numpy arrays to PyTorch tensors
                 )
                 r_w = (
                     torch.from_numpy(train_data.w[1]).type(torch.FloatTensor).to(device)
+                    #transform numpy arrays to PyTorch tensors
                 )
                 class_weight = [l_w, r_w]
                 logger.debug("class weight: {}".format(train_data.w))
             else:
                 lossG.weight = (
-                    torch.from_numpy(train_data.w).type(torch.FloatTensor).to(device)
+                    torch.from_numpy(train_data.w).type(torch.FloatTensor).to(device)\
+                    #transform numpy arrays to PyTorch tensors
                 )
                 logger.debug("class weight: {}".format(train_data.w))
 
