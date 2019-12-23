@@ -67,6 +67,8 @@ def save_checkpoint(state, is_best, opts, logger, epoch, criterion=""):
         out_file = os.path.join(
             opts.checkpoints, "".join(["best_under", criterion, "criterion.pth"])
         )
+        
+        # to save current model
         torch.save(state, out_file)
         logger.info("Best model saved to {} at epoch {}".format(out_file, str(epoch)))
     else:
@@ -93,6 +95,7 @@ def check_inputs(opts, logger):
             if not (
                 os.path.isfile(opts.tr_img_list)
                 and os.access(opts.tr_img_list, os.R_OK)
+                #Returns: True if access is allowed, else returns False.
             ):
                 n_err = n_err + 1
                 logger.error(
@@ -269,6 +272,7 @@ def main():
     ch.setLevel(logging.INFO)
     logger.debug(in_args)
     # --- set device
+    # checks available gpu devices
     device = torch.device("cuda" if opts.use_gpu else "cpu")
     # --- Init torch random
     # --- This two are suposed to be merged in the future, for now keep boot
@@ -278,6 +282,7 @@ def main():
     bestState = None
     prior = None
     torch.set_default_tensor_type("torch.FloatTensor")
+    # torch.set_default_tensor_type(torch.DoubleTensor) will change it to torch.float64
     # --- configure TensorBoard display
     opts.img_size = np.array(opts.img_size, dtype=np.int)
     # --------------------------------------------------------------------------
@@ -293,7 +298,7 @@ def main():
 
             try:
                 from tensorboardX import SummaryWriter
-
+                #The SummaryWriter class is your main entry to log data for consumption and visualization 
                 if opts.use_global_log:
                     run_dir = opts.use_global_log
                 else:
